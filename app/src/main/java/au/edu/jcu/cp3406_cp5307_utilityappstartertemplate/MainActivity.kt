@@ -43,6 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.theme.CP3406_CP5603UtilityAppStarterTemplateTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.GoReadyViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,13 +75,11 @@ fun UtilityAppPreview() {
 }
 
 @Composable
-fun UtilityApp() {
+fun UtilityApp(
+    goReadyViewModel: GoReadyViewModel = viewModel()
+) {
     var selectedTab by remember { mutableStateOf("Utility") }
-
-    var selectedCity by remember { mutableStateOf("Singapore") }
-    var useFahrenheit by remember { mutableStateOf(false) }
-    var showDetails by remember { mutableStateOf(true) }
-    var detailedAdvice by remember { mutableStateOf(true) }
+    val uiState = goReadyViewModel.uiState
 
     Scaffold(
         bottomBar = {
@@ -102,21 +102,23 @@ fun UtilityApp() {
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
                 "Utility" -> UtilityScreen(
-                    selectedCity = selectedCity,
-                    useFahrenheit = useFahrenheit,
-                    showDetails = showDetails,
-                    detailedAdvice = detailedAdvice
+                    selectedCity = uiState.selectedCity,
+                    useFahrenheit = uiState.useFahrenheit,
+                    showDetails = uiState.showDetails,
+                    detailedAdvice = uiState.detailedAdvice,
+                    refreshCount = uiState.refreshCount,
+                    onRefresh = goReadyViewModel::refreshAdvice
                 )
 
                 "Settings" -> SettingsScreen(
-                    selectedCity = selectedCity,
-                    onCityChange = { selectedCity = it },
-                    useFahrenheit = useFahrenheit,
-                    onUnitChange = { useFahrenheit = it },
-                    showDetails = showDetails,
-                    onShowDetailsChange = { showDetails = it },
-                    detailedAdvice = detailedAdvice,
-                    onAdviceModeChange = { detailedAdvice = it }
+                    selectedCity = uiState.selectedCity,
+                    onCityChange = goReadyViewModel::selectCity,
+                    useFahrenheit = uiState.useFahrenheit,
+                    onUnitChange = goReadyViewModel::setUseFahrenheit,
+                    showDetails = uiState.showDetails,
+                    onShowDetailsChange = goReadyViewModel::setShowDetails,
+                    detailedAdvice = uiState.detailedAdvice,
+                    onAdviceModeChange = goReadyViewModel::setDetailedAdvice
                 )
             }
         }
@@ -128,9 +130,10 @@ fun UtilityScreen(
     selectedCity: String,
     useFahrenheit: Boolean,
     showDetails: Boolean,
-    detailedAdvice: Boolean
+    detailedAdvice: Boolean,
+    refreshCount: Int,
+    onRefresh: () -> Unit
 ) {
-    var refreshCount by remember { mutableIntStateOf(0) }
 
     val weather = getSampleWeather(selectedCity)
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
@@ -240,7 +243,7 @@ fun UtilityScreen(
         }
 
         Button(
-            onClick = { refreshCount++ },
+            onClick = onRefresh,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Refresh Advice")
