@@ -30,6 +30,8 @@ fun UtilityScreen(
     showDetails: Boolean,
     detailedAdvice: Boolean,
     refreshCount: Int,
+    isLoading: Boolean,
+    errorMessage: String?,
     onRefresh: () -> Unit
 ) {
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
@@ -53,6 +55,21 @@ fun UtilityScreen(
             text = "Quick daily go-out advice based on weather conditions.",
             style = MaterialTheme.typography.bodyMedium
         )
+
+        if (isLoading) {
+            Text(
+                text = "Updating live weather...",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),

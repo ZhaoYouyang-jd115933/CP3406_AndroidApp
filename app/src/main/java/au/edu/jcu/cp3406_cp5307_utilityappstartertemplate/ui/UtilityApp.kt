@@ -54,6 +54,8 @@ fun UtilityApp(
                     showDetails = uiState.showDetails,
                     detailedAdvice = uiState.detailedAdvice,
                     refreshCount = uiState.refreshCount,
+                    isLoading = uiState.isLoading,
+                    errorMessage = uiState.errorMessage,
                     onRefresh = goReadyViewModel::refreshAdvice
                 )
 
