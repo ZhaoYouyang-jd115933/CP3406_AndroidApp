@@ -4,24 +4,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherRepository
+import kotlinx.coroutines.launch
 
 class GoReadyViewModel : ViewModel() {
 
     private val weatherRepository = WeatherRepository()
 
-    var uiState by mutableStateOf(
-        GoReadyUiState(
-            weather = weatherRepository.getWeather("Singapore")
-        )
-    )
+    var uiState by mutableStateOf(GoReadyUiState())
         private set
 
+    init {
+        loadWeather(uiState.selectedCity)
+    }
+
     fun selectCity(city: String) {
-        uiState = uiState.copy(
-            selectedCity = city,
-            weather = weatherRepository.getWeather(city)
-        )
+        uiState = uiState.copy(selectedCity = city)
+        loadWeather(city)
     }
 
     fun setUseFahrenheit(useFahrenheit: Boolean) {
@@ -37,9 +37,31 @@ class GoReadyViewModel : ViewModel() {
     }
 
     fun refreshAdvice() {
-        uiState = uiState.copy(
-            weather = weatherRepository.getWeather(uiState.selectedCity),
-            refreshCount = uiState.refreshCount + 1
-        )
+        uiState = uiState.copy(refreshCount = uiState.refreshCount + 1)
+        loadWeather(uiState.selectedCity)
+    }
+
+    private fun loadWeather(city: String) {
+        viewModelScope.launch {
+            uiState = uiState.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+
+            try {
+                val weather = weatherRepository.getWeather(city)
+
+                uiState = uiState.copy(
+                    weather = weather,
+                    isLoading = false,
+                    errorMessage = null
+                )
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    errorMessage = "Weather update failed. Showing last available data."
+                )
+            }
+        }
     }
 }
