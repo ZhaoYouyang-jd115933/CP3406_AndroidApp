@@ -14,5 +14,7 @@ data class GoReadyUiState(
     val useFahrenheit: Boolean = false,
     val showDetails: Boolean = true,
     val detailedAdvice: Boolean = true,
-    val refreshCount: Int = 0
+    val refreshCount: Int = 0,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )
