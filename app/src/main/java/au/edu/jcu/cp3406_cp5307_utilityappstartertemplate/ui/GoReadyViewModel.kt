@@ -6,22 +6,28 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GoReadyViewModel : ViewModel() {
 
     private val weatherRepository = WeatherRepository()
+    private var autoRefreshJob: Job? = null
 
     var uiState by mutableStateOf(GoReadyUiState())
         private set
 
     init {
-        loadWeather(uiState.selectedCity)
+        refreshWeather()
+        startAutoRefresh()
     }
 
     fun selectCity(city: String) {
         uiState = uiState.copy(selectedCity = city)
-        loadWeather(city)
+        refreshWeather()
     }
 
     fun setUseFahrenheit(useFahrenheit: Boolean) {
@@ -38,30 +44,55 @@ class GoReadyViewModel : ViewModel() {
 
     fun refreshAdvice() {
         uiState = uiState.copy(refreshCount = uiState.refreshCount + 1)
-        loadWeather(uiState.selectedCity)
+        refreshWeather()
     }
 
-    private fun loadWeather(city: String) {
+    private fun refreshWeather() {
+        val cityToLoad = uiState.selectedCity
+
         viewModelScope.launch {
-            uiState = uiState.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            loadWeather(cityToLoad)
+        }
+    }
 
-            try {
-                val weather = weatherRepository.getWeather(city)
+    private fun startAutoRefresh() {
+        autoRefreshJob?.cancel()
 
+        autoRefreshJob = viewModelScope.launch {
+            while (true) {
+                delay(AUTO_REFRESH_INTERVAL_MS)
+                loadWeather(uiState.selectedCity)
+            }
+        }
+    }
+
+    private suspend fun loadWeather(city: String) {
+        uiState = uiState.copy(
+            isLoading = true,
+            errorMessage = null
+        )
+
+        try {
+            val weather = withContext(Dispatchers.IO) {
+                weatherRepository.getWeather(city)
+            }
+
+            if (uiState.selectedCity == city) {
                 uiState = uiState.copy(
                     weather = weather,
                     isLoading = false,
                     errorMessage = null
                 )
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    errorMessage = "Weather update failed. Showing last available data."
-                )
             }
+        } catch (e: Exception) {
+            uiState = uiState.copy(
+                isLoading = false,
+                errorMessage = "Weather update failed. Showing last available data."
+            )
         }
+    }
+
+    companion object {
+        private const val AUTO_REFRESH_INTERVAL_MS = 15 * 60 * 1000L
     }
 }
