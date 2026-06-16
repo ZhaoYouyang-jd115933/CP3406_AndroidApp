@@ -22,15 +22,7 @@ class GoReadyViewModel : ViewModel() {
     }
 
     fun selectCity(city: String) {
-        uiState = uiState.copy(
-            selectedCity = city,
-            useCurrentLocation = false,
-            currentLatitude = null,
-            currentLongitude = null,
-            locationAccuracyMeters = null,
-            locationMessage = "Using selected city weather."
-        )
-
+        uiState = uiState.copy(selectedCity = city)
         refreshSelectedCityWeather()
     }
 
@@ -46,91 +38,12 @@ class GoReadyViewModel : ViewModel() {
         uiState = uiState.copy(detailedAdvice = detailedAdvice)
     }
 
-    fun setUseCurrentLocation(useCurrentLocation: Boolean) {
-        uiState = uiState.copy(
-            useCurrentLocation = useCurrentLocation,
-            locationMessage = if (useCurrentLocation) {
-                "Using current location weather."
-            } else {
-                "Using selected city weather."
-            }
-        )
-
-        if (!useCurrentLocation) {
-            uiState = uiState.copy(
-                currentLatitude = null,
-                currentLongitude = null,
-                locationAccuracyMeters = null
-            )
-
-            refreshSelectedCityWeather()
-        }
-    }
-
     fun refreshAdvice() {
         uiState = uiState.copy(refreshCount = uiState.refreshCount + 1)
-
-        if (!uiState.useCurrentLocation) {
-            refreshSelectedCityWeather()
-        }
-    }
-
-    fun loadWeatherForCurrentLocation(
-        latitude: Double,
-        longitude: Double,
-        accuracyMeters: Float?
-    ) {
-        viewModelScope.launch {
-            uiState = uiState.copy(
-                isLoading = true,
-                errorMessage = null,
-                currentLatitude = latitude,
-                currentLongitude = longitude,
-                locationAccuracyMeters = accuracyMeters,
-                locationMessage = "Updating weather for your current location..."
-            )
-
-            try {
-                val weather = withContext(Dispatchers.IO) {
-                    weatherRepository.getWeatherForCoordinates(
-                        latitude = latitude,
-                        longitude = longitude,
-                        locationName = "Current location"
-                    )
-                }
-
-                uiState = uiState.copy(
-                    weather = weather,
-                    isLoading = false,
-                    errorMessage = null,
-                    currentLatitude = latitude,
-                    currentLongitude = longitude,
-                    locationAccuracyMeters = accuracyMeters,
-                    locationMessage = "Weather updated using current location."
-                )
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    errorMessage = "Current location weather failed. Showing last available data."
-                )
-            }
-        }
-    }
-
-    fun handleLocationUnavailable() {
-        uiState = uiState.copy(
-            useCurrentLocation = false,
-            isLoading = false,
-            currentLatitude = null,
-            currentLongitude = null,
-            locationAccuracyMeters = null,
-            locationMessage = "Location unavailable. Using selected city instead."
-        )
-
         refreshSelectedCityWeather()
     }
 
-    fun refreshSelectedCityWeather() {
+    private fun refreshSelectedCityWeather() {
         val cityToLoad = uiState.selectedCity
 
         viewModelScope.launch {
@@ -144,7 +57,7 @@ class GoReadyViewModel : ViewModel() {
                     weatherRepository.getWeather(cityToLoad)
                 }
 
-                if (!uiState.useCurrentLocation && uiState.selectedCity == cityToLoad) {
+                if (uiState.selectedCity == cityToLoad) {
                     uiState = uiState.copy(
                         weather = weather,
                         isLoading = false,
@@ -154,7 +67,7 @@ class GoReadyViewModel : ViewModel() {
             } catch (e: Exception) {
                 uiState = uiState.copy(
                     isLoading = false,
-                    errorMessage = "Weather update failed. Showing last available data."
+                    errorMessage = "Unable to update live weather. Please check your internet connection."
                 )
             }
         }

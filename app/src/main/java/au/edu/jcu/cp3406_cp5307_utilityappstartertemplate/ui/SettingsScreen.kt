@@ -26,10 +26,7 @@ fun SettingsScreen(
     showDetails: Boolean,
     onShowDetailsChange: (Boolean) -> Unit,
     detailedAdvice: Boolean,
-    onAdviceModeChange: (Boolean) -> Unit,
-    useCurrentLocation: Boolean,
-    onUseCurrentLocationChange: (Boolean) -> Unit,
-    locationMessage: String?
+    onAdviceModeChange: (Boolean) -> Unit
 ) {
     val cities = listOf("Singapore", "Sydney", "Tokyo", "London")
 
@@ -50,32 +47,12 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Weather Source",
+                    text = "City",
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                SettingSwitchRow(
-                    title = "Use current location",
-                    description = "Use your device location to update weather advice.",
-                    checked = useCurrentLocation,
-                    onCheckedChange = onUseCurrentLocationChange
-                )
-
-                if (locationMessage != null) {
-                    Text(
-                        text = locationMessage,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-
-                HorizontalDivider()
-
                 Text(
-                    text = if (useCurrentLocation) {
-                        "Manual city selection is disabled while current location is enabled."
-                    } else {
-                        "Choose a city manually when current location is off."
-                    },
+                    text = "Choose the city used for live weather advice.",
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -83,19 +60,12 @@ fun SettingsScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable(enabled = !useCurrentLocation) {
-                                onCityChange(city)
-                            },
+                            .clickable { onCityChange(city) },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
                             selected = selectedCity == city,
-                            onClick = {
-                                if (!useCurrentLocation) {
-                                    onCityChange(city)
-                                }
-                            },
-                            enabled = !useCurrentLocation
+                            onClick = { onCityChange(city) }
                         )
 
                         Text(text = city)

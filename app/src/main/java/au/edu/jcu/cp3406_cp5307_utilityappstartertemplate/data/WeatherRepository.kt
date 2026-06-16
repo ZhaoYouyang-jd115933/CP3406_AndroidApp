@@ -4,7 +4,6 @@ import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.network.RetrofitInstan
 import kotlin.math.roundToInt
 
 class WeatherRepository {
-
     suspend fun getWeather(city: String): WeatherSnapshot {
         val location = getCityLocation(city)
 
@@ -63,6 +62,7 @@ class WeatherRepository {
         val index = hourlyTimes.indexOfFirst { it.take(13) == currentHour }
         return if (index >= 0) index else 0
     }
+
 }
 
 private data class CityLocation(
