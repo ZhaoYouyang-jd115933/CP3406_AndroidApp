@@ -19,10 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.formatTemperature
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdvice
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getStatusNote
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherGaugeCard
+import androidx.compose.foundation.layout.height
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiModel
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceTextCard
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceVisualCard
 
 @Composable
 fun UtilityScreen(
@@ -38,7 +41,7 @@ fun UtilityScreen(
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
     val status = getGoOutStatus(weather)
     val statusNote = getStatusNote(weather)
-    val advice = getAdvice(weather, detailedAdvice)
+    val adviceUi = getAdviceUiModel(weather, detailedAdvice)
 
     val rainProgress = weather.rainChance / 100f
     val uvProgress = weather.uvIndex / 11f
@@ -112,25 +115,21 @@ fun UtilityScreen(
             }
         }
 
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(170.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text(
-                    text = "Advice",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+            AdviceTextCard(
+                advice = adviceUi,
+                modifier = Modifier.weight(1.7f)
+            )
 
-                Text(
-                    text = advice,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            AdviceVisualCard(
+                advice = adviceUi,
+                modifier = Modifier.weight(1f)
+            )
         }
 
         if (showDetails) {
