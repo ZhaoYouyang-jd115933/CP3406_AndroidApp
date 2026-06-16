@@ -8,9 +8,21 @@ class WeatherRepository {
     suspend fun getWeather(city: String): WeatherSnapshot {
         val location = getCityLocation(city)
 
-        val response = RetrofitInstance.weatherApi.getForecast(
+        return getWeatherForCoordinates(
             latitude = location.latitude,
-            longitude = location.longitude
+            longitude = location.longitude,
+            locationName = city
+        )
+    }
+
+    suspend fun getWeatherForCoordinates(
+        latitude: Double,
+        longitude: Double,
+        locationName: String = "Current location"
+    ): WeatherSnapshot {
+        val response = RetrofitInstance.weatherApi.getForecast(
+            latitude = latitude,
+            longitude = longitude
         )
 
         val currentHourIndex = findCurrentHourIndex(
@@ -26,7 +38,7 @@ class WeatherRepository {
             ?.roundToInt() ?: 0
 
         return WeatherSnapshot(
-            city = city,
+            city = locationName,
             temperatureC = response.current.temperatureC.roundToInt(),
             rainChance = rainChance,
             uvIndex = uvIndex,
