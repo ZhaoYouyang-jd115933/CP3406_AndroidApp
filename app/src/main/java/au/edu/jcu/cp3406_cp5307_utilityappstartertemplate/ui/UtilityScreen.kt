@@ -50,8 +50,13 @@ fun UtilityScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+            .padding(
+                start = 18.dp,
+                end = 18.dp,
+                top = 18.dp,
+                bottom = 12.dp
+            ),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
             text = "GoReady",
@@ -87,7 +92,7 @@ fun UtilityScreen(
             )
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -118,12 +123,12 @@ fun UtilityScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(170.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                .height(128.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             AdviceTextCard(
                 advice = adviceUi,
-                modifier = Modifier.weight(1.7f)
+                modifier = Modifier.weight(1.55f)
             )
 
             AdviceVisualCard(
@@ -211,7 +216,9 @@ fun UtilityScreen(
 
         Button(
             onClick = onRefresh,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(42.dp)
         ) {
             Text("Refresh Advice")
         }

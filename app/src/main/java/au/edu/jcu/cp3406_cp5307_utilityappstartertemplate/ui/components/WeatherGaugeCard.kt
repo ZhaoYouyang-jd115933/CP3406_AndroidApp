@@ -40,18 +40,18 @@ fun WeatherGaugeCard(
 ) {
     Column(
         modifier = modifier
-            .height(150.dp)
+            .height(112.dp)
             .clip(RoundedCornerShape(22.dp))
             .background(
                 brush = Brush.verticalGradient(cardGradient)
             )
-            .padding(10.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
@@ -63,12 +63,12 @@ fun WeatherGaugeCard(
             arcGradient = arcGradient,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(58.dp)
+                .height(40.dp)
         )
 
         Text(
             text = valueText,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -77,7 +77,7 @@ fun WeatherGaugeCard(
 
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.titleMedium,
             color = Color.White.copy(alpha = 0.85f),
             textAlign = TextAlign.Center,
             maxLines = 1

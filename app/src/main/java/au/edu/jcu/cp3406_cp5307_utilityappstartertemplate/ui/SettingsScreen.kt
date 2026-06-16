@@ -65,19 +65,35 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall
                 )
 
-                cities.forEach { city ->
+                cities.chunked(2).forEach { rowCities ->
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCityChange(city) },
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        RadioButton(
-                            selected = selectedCity == city,
-                            onClick = { onCityChange(city) }
-                        )
+                        rowCities.forEach { city ->
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { onCityChange(city) },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = selectedCity == city,
+                                    onClick = { onCityChange(city) }
+                                )
 
-                        Text(text = city)
+                                Text(
+                                    text = city,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+
+                        if (rowCities.size == 1) {
+                            androidx.compose.foundation.layout.Spacer(
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
             }
@@ -87,8 +103,8 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.padding(14.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
                     text = "Display Preferences",
