@@ -123,7 +123,7 @@ fun UtilityScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(128.dp),
+                .height(156.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             AdviceTextCard(
@@ -223,10 +223,6 @@ fun UtilityScreen(
             Text("Refresh Advice")
         }
 
-        Text(
-            text = "Updated $refreshCount time(s) in this session",
-            style = MaterialTheme.typography.bodySmall
-        )
     }
 }
 

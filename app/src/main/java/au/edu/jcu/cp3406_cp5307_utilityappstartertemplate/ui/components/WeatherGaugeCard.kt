@@ -40,7 +40,7 @@ fun WeatherGaugeCard(
 ) {
     Column(
         modifier = modifier
-            .height(112.dp)
+            .height(130.dp)
             .clip(RoundedCornerShape(22.dp))
             .background(
                 brush = Brush.verticalGradient(cardGradient)
@@ -63,7 +63,7 @@ fun WeatherGaugeCard(
             arcGradient = arcGradient,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp)
+                .height(42.dp)
         )
 
         Text(
