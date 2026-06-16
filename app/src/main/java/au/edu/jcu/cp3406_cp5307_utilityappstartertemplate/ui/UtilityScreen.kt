@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiModel
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceTextCard
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceVisualCard
+import androidx.compose.material3.ButtonDefaults
 
 @Composable
 fun UtilityScreen(
@@ -218,7 +219,11 @@ fun UtilityScreen(
             onClick = onRefresh,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(42.dp)
+                .height(42.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFD6E8FF),
+                contentColor = Color(0xFF1E3A5F)
+            )
         ) {
             Text("Refresh Advice")
         }
