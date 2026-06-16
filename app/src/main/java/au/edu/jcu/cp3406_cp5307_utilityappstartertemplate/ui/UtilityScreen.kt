@@ -2,6 +2,7 @@ package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,11 +10,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
@@ -21,7 +22,7 @@ import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.formatTemperatu
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdvice
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getStatusNote
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherDetailRow
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherGaugeCard
 
 @Composable
 fun UtilityScreen(
@@ -38,6 +39,10 @@ fun UtilityScreen(
     val status = getGoOutStatus(weather)
     val statusNote = getStatusNote(weather)
     val advice = getAdvice(weather, detailedAdvice)
+
+    val rainProgress = weather.rainChance / 100f
+    val uvProgress = weather.uvIndex / 11f
+    val windProgress = weather.windKmh / 60f
 
     Column(
         modifier = Modifier
@@ -137,7 +142,7 @@ fun UtilityScreen(
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
@@ -146,13 +151,61 @@ fun UtilityScreen(
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    WeatherDetailRow(label = "Rain chance", value = "${weather.rainChance}%")
-                    HorizontalDivider()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        WeatherGaugeCard(
+                            title = "Rain",
+                            valueText = "${weather.rainChance}%",
+                            label = "chance",
+                            progress = rainProgress,
+                            cardGradient = listOf(
+                                Color(0xFF93C5FD),
+                                Color(0xFF1D4ED8)
+                            ),
+                            arcGradient = listOf(
+                                Color(0xFFDBEAFE),
+                                Color(0xFF93C5FD),
+                                Color(0xFF3B82F6)
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
 
-                    WeatherDetailRow(label = "UV index", value = weather.uvIndex.toString())
-                    HorizontalDivider()
+                        WeatherGaugeCard(
+                            title = "UV",
+                            valueText = weather.uvIndex.toString(),
+                            label = "index",
+                            progress = uvProgress,
+                            cardGradient = listOf(
+                                Color(0xFFF9A8D4),
+                                Color(0xFFDB2777)
+                            ),
+                            arcGradient = listOf(
+                                Color(0xFFFCE7F3),
+                                Color(0xFFF9A8D4),
+                                Color(0xFFEC4899)
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
 
-                    WeatherDetailRow(label = "Wind speed", value = "${weather.windKmh} km/h")
+                        WeatherGaugeCard(
+                            title = "Wind",
+                            valueText = "${weather.windKmh}",
+                            label = "km/h",
+                            progress = windProgress,
+                            cardGradient = listOf(
+                                Color(0xFFD8B4FE),
+                                Color(0xFF7C3AED)
+                            ),
+                            arcGradient = listOf(
+                                Color(0xFFF3E8FF),
+                                Color(0xFFD8B4FE),
+                                Color(0xFFA855F7)
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
@@ -169,7 +222,6 @@ fun UtilityScreen(
             style = MaterialTheme.typography.bodySmall
         )
     }
-
 }
 
 
