@@ -28,7 +28,16 @@ fun SettingsScreen(
     detailedAdvice: Boolean,
     onAdviceModeChange: (Boolean) -> Unit
 ) {
-    val cities = listOf("Singapore", "Sydney", "Tokyo", "London")
+    val cities = listOf(
+        "Singapore",
+        "Bergen",
+        "Darwin",
+        "Wellington",
+        "Dubai",
+        "Reykjavik",
+        "Tokyo",
+        "London"
+    )
 
     Column(
         modifier = Modifier.padding(16.dp),

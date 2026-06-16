@@ -47,9 +47,26 @@ class WeatherRepository {
 
     private fun getCityLocation(city: String): CityLocation {
         return when (city) {
-            "Sydney" -> CityLocation(latitude = -33.8688, longitude = 151.2093)
+            "Singapore" -> CityLocation(latitude = 1.3521, longitude = 103.8198)
+
+            // Rain-prone city, useful for umbrella advice when rain probability is high
+            "Bergen" -> CityLocation(latitude = 60.3913, longitude = 5.3221)
+
+            // Tropical city, useful for high UV or heat advice
+            "Darwin" -> CityLocation(latitude = -12.4634, longitude = 130.8456)
+
+            // Windy city, useful for wind-care advice
+            "Wellington" -> CityLocation(latitude = -41.2865, longitude = 174.7762)
+
+            // Hot city, useful for hydration advice
+            "Dubai" -> CityLocation(latitude = 25.2048, longitude = 55.2708)
+
+            // Cold city, useful for layer-up advice
+            "Reykjavik" -> CityLocation(latitude = 64.1466, longitude = -21.9426)
+
             "Tokyo" -> CityLocation(latitude = 35.6762, longitude = 139.6503)
             "London" -> CityLocation(latitude = 51.5072, longitude = -0.1276)
+
             else -> CityLocation(latitude = 1.3521, longitude = 103.8198)
         }
     }
