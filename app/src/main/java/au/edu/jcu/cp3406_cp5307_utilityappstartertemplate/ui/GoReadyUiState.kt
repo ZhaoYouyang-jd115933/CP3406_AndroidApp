@@ -16,5 +16,7 @@ data class GoReadyUiState(
     val detailedAdvice: Boolean = true,
     val refreshCount: Int = 0,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val useCurrentLocation: Boolean = false,
+    val locationMessage: String? = null
 )
