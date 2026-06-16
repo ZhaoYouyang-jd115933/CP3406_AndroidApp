@@ -18,5 +18,8 @@ data class GoReadyUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val useCurrentLocation: Boolean = false,
-    val locationMessage: String? = null
+    val locationMessage: String? = null,
+    val currentLatitude: Double? = null,
+    val currentLongitude: Double? = null,
+    val locationAccuracyMeters: Float? = null
 )

@@ -22,6 +22,7 @@ import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdvice
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getStatusNote
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherDetailRow
+import java.util.Locale
 
 @Composable
 fun UtilityScreen(
@@ -32,6 +33,9 @@ fun UtilityScreen(
     refreshCount: Int,
     isLoading: Boolean,
     errorMessage: String?,
+    currentLatitude: Double?,
+    currentLongitude: Double?,
+    locationAccuracyMeters: Float?,
     onRefresh: () -> Unit
 ) {
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
@@ -148,9 +152,42 @@ fun UtilityScreen(
 
                     WeatherDetailRow(label = "Rain chance", value = "${weather.rainChance}%")
                     HorizontalDivider()
+
                     WeatherDetailRow(label = "UV index", value = weather.uvIndex.toString())
                     HorizontalDivider()
+
                     WeatherDetailRow(label = "Wind speed", value = "${weather.windKmh} km/h")
+
+                    if (currentLatitude != null && currentLongitude != null) {
+                        HorizontalDivider()
+
+                        Text(
+                            text = "Detected location",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        WeatherDetailRow(
+                            label = "Latitude",
+                            value = String.format(Locale.US, "%.4f", currentLatitude)
+                        )
+
+                        HorizontalDivider()
+
+                        WeatherDetailRow(
+                            label = "Longitude",
+                            value = String.format(Locale.US, "%.4f", currentLongitude)
+                        )
+
+                        if (locationAccuracyMeters != null) {
+                            HorizontalDivider()
+
+                            WeatherDetailRow(
+                                label = "Location accuracy",
+                                value = "±${locationAccuracyMeters.toInt()} m"
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -167,4 +204,6 @@ fun UtilityScreen(
             style = MaterialTheme.typography.bodySmall
         )
     }
+
 }
+

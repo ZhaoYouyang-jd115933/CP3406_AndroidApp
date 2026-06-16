@@ -9,7 +9,8 @@ import kotlinx.coroutines.tasks.await
 
 data class UserLocation(
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val accuracyMeters: Float?
 )
 
 class LocationRepository(context: Context) {
@@ -32,7 +33,8 @@ class LocationRepository(context: Context) {
         return location?.let {
             UserLocation(
                 latitude = it.latitude,
-                longitude = it.longitude
+                longitude = it.longitude,
+                accuracyMeters = if (it.hasAccuracy()) it.accuracy else null
             )
         }
     }
