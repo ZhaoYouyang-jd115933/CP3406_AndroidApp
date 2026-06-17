@@ -129,6 +129,7 @@ fun UtilityScreen(
         ) {
             AdviceTextCard(
                 advice = adviceUi,
+                showDetail = detailedAdvice,
                 modifier = Modifier.weight(1.55f)
             )
 

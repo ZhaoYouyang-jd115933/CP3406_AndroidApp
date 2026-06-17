@@ -7,7 +7,7 @@ fun getAdviceUiModel(
     detailedAdvice: Boolean
 ): AdviceUiModel {
     return when {
-        weather.rainChance >= 70 -> {
+        weather.rainChance >= 60 -> {
             AdviceUiModel(
                 type = AdviceType.UMBRELLA,
                 headline = "Bring an umbrella",
@@ -46,7 +46,7 @@ fun getAdviceUiModel(
             )
         }
 
-        weather.temperatureC >= 32 -> {
+        weather.temperatureC >= 30 -> {
             AdviceUiModel(
                 type = AdviceType.HYDRATE,
                 headline = "Drink more water",
