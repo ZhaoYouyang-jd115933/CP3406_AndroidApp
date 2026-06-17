@@ -36,7 +36,8 @@ fun SettingsScreen(
         "Dubai",
         "Reykjavik",
         "Tokyo",
-        "London"
+        "London",
+        "Ushuaia"
     )
 
     Column(

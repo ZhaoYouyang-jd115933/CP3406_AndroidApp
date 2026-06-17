@@ -66,6 +66,7 @@ class WeatherRepository {
 
             "Tokyo" -> CityLocation(latitude = 35.6762, longitude = 139.6503)
             "London" -> CityLocation(latitude = 51.5072, longitude = -0.1276)
+            "Ushuaia" -> CityLocation(latitude = -54.8019, longitude = -68.3030)
 
             else -> CityLocation(latitude = 1.3521, longitude = 103.8198)
         }
