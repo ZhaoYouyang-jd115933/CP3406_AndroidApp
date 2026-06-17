@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components
 
+import androidx.compose.ui.unit.sp
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -127,7 +128,7 @@ fun AdviceTextCard(
                 style = if (advice.type == AdviceType.READY) {
                     MaterialTheme.typography.titleLarge
                 } else {
-                    MaterialTheme.typography.titleMedium
+                    MaterialTheme.typography.titleMedium.copy(fontSize = 19.sp)
                 },
                 fontWeight = FontWeight.Bold,
                 color = headlineColor
@@ -136,8 +137,10 @@ fun AdviceTextCard(
             if (showDetail) {
                 Text(
                     text = advice.detail,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
