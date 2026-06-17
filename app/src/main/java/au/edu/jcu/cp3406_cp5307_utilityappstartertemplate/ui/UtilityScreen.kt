@@ -1,5 +1,10 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +32,7 @@ import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiMode
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceTextCard
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceVisualCard
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.ui.Alignment
 
 @Composable
 fun UtilityScreen(
@@ -86,38 +92,86 @@ fun UtilityScreen(
         }
 
         ElevatedCard(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(170.dp),
+            shape = RoundedCornerShape(26.dp),
             colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+                containerColor = Color.Transparent
+            ),
+            elevation = CardDefaults.elevatedCardElevation(
+                defaultElevation = 2.dp
             )
         ) {
-            Column(
-                modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF9CC8FF),
+                                Color(0xFF83B4F5),
+                                Color(0xFF78A9EE)
+                            )
+                        )
+                    )
+                    .padding(18.dp)
             ) {
-                Text(
-                    text = weather.city,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(7.dp)
+                        ) {
+                            Text(
+                                text = weather.city,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White.copy(alpha = 0.95f)
+                            )
 
-                Text(
-                    text = status,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                            Text(
+                                text = status,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
 
-                Text(
-                    text = temperatureText,
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold
-                )
+                            Text(
+                                text = temperatureText,
+                                style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
 
-                Text(
-                    text = statusNote,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                        Text(
+                            text = "Live",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White,
+                            modifier = Modifier
+                                .background(
+                                    color = Color.White.copy(alpha = 0.22f),
+                                    shape = RoundedCornerShape(999.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 5.dp)
+                        )
+                    }
+
+                    Text(
+                        text = "Current temperature",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.88f)
+                    )
+                }
             }
         }
 
