@@ -1,38 +1,38 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.formatTemperature
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getStatusNote
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherGaugeCard
-import androidx.compose.foundation.layout.height
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiModel
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceTextCard
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceVisualCard
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.ui.Alignment
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.HeroWeatherIcon
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherGaugeCard
 
 @Composable
 fun UtilityScreen(
@@ -47,7 +47,6 @@ fun UtilityScreen(
 ) {
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
     val status = getGoOutStatus(weather)
-    val statusNote = getStatusNote(weather)
     val adviceUi = getAdviceUiModel(weather, detailedAdvice)
 
     val rainProgress = weather.rainChance / 100f
@@ -94,7 +93,7 @@ fun UtilityScreen(
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(170.dp),
+                .height(180.dp),
             shape = RoundedCornerShape(26.dp),
             colors = CardDefaults.elevatedCardColors(
                 containerColor = Color.Transparent
@@ -118,60 +117,67 @@ fun UtilityScreen(
                     .padding(18.dp)
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .fillMaxWidth(0.58f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(7.dp)
-                        ) {
-                            Text(
-                                text = weather.city,
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color.White.copy(alpha = 0.95f)
-                            )
+                    Text(
+                        text = weather.city,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White.copy(alpha = 0.95f)
+                    )
 
-                            Text(
-                                text = status,
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
+                    Text(
+                        text = status,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            lineHeight = 30.sp,
+                            letterSpacing = 0.sp
+                        ),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
 
-                            Text(
-                                text = temperatureText,
-                                style = MaterialTheme.typography.displaySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
-
-                        Text(
-                            text = "Live",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
-                            modifier = Modifier
-                                .background(
-                                    color = Color.White.copy(alpha = 0.22f),
-                                    shape = RoundedCornerShape(999.dp)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 5.dp)
-                        )
-                    }
+                    Text(
+                        text = temperatureText,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            lineHeight = 42.sp,
+                            letterSpacing = 0.sp
+                        ),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
 
                     Text(
                         text = "Current temperature",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White.copy(alpha = 0.88f)
+                        color = Color.White.copy(alpha = 0.9f)
                     )
                 }
+
+                Text(
+                    text = "Live",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .background(
+                            color = Color.White.copy(alpha = 0.22f),
+                            shape = RoundedCornerShape(999.dp)
+                        )
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                )
+
+                HeroWeatherIcon(
+                    weather = weather,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 8.dp, top = 8.dp)
+                        .size(112.dp)
+                )
             }
         }
 
@@ -282,7 +288,6 @@ fun UtilityScreen(
         ) {
             Text("Refresh Advice")
         }
-
     }
 }
 
