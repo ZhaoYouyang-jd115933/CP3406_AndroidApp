@@ -20,7 +20,7 @@ fun getAdviceUiModel(
             )
         }
 
-        weather.uvIndex >= 8 -> {
+        weather.uvIndex >= 6 -> {
             AdviceUiModel(
                 type = AdviceType.SUNSCREEN,
                 headline = "Use sunscreen",

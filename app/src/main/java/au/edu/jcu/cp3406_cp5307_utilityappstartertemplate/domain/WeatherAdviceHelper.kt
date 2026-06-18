@@ -14,7 +14,7 @@ fun formatTemperature(temperatureC: Int, useFahrenheit: Boolean): String {
 fun getGoOutStatus(weather: WeatherSnapshot): String {
     return when {
         weather.rainChance >= 60 -> "Rain risk"
-        weather.uvIndex >= 8 -> "Sun protection"
+        weather.uvIndex >= 6 -> "Sun protection"
         weather.windKmh >= 25 -> "Strong wind"
         weather.temperatureC >= 30 -> "Hot weather"
         weather.temperatureC <= 18 -> "Cool weather"
