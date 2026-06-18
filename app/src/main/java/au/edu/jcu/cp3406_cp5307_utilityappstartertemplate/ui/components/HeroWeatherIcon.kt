@@ -31,7 +31,7 @@ fun HeroWeatherIcon(
 ) {
     val type = when {
         weather.rainChance >= 60 -> HeroWeatherType.RAIN
-        weather.uvIndex >= 8 -> HeroWeatherType.SUN
+        weather.uvIndex >= 6 -> HeroWeatherType.SUN
         weather.windKmh >= 25 -> HeroWeatherType.WIND
         weather.temperatureC >= 30 -> HeroWeatherType.HOT
         weather.temperatureC <= 18 -> HeroWeatherType.COOL
