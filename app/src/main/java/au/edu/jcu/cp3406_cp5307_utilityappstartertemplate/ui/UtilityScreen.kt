@@ -31,6 +31,7 @@ import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiMode
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getGoOutStatus
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceTextCard
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.AdviceVisualCard
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.GoReadyBrandHeader
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.HeroWeatherIcon
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.WeatherGaugeCard
 
@@ -63,15 +64,10 @@ fun UtilityScreen(
             ),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
-            text = "GoReady",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(
-            text = "Quick daily go-out advice based on weather conditions.",
-            style = MaterialTheme.typography.bodyMedium
+        // Branded header replaces the plain title and subtitle.
+        // This gives the home screen a stronger visual identity without changing the weather logic.
+        GoReadyBrandHeader(
+            modifier = Modifier.fillMaxWidth()
         )
 
         if (isLoading) {
