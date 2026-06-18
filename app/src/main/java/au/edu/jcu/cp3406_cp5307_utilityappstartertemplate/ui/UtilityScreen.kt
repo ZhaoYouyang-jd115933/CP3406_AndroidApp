@@ -204,7 +204,7 @@ fun UtilityScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    containerColor = Color(0xFFF6F8FC)
                 )
             ) {
                 Column(
@@ -227,13 +227,13 @@ fun UtilityScreen(
                             label = "chance",
                             progress = rainProgress,
                             cardGradient = listOf(
-                                Color(0xFF93C5FD),
-                                Color(0xFF1D4ED8)
+                                Color(0xFFE0F7FA),
+                                Color(0xFFB2EBF2)
                             ),
                             arcGradient = listOf(
-                                Color(0xFFDBEAFE),
-                                Color(0xFF93C5FD),
-                                Color(0xFF3B82F6)
+                                Color(0xFFF0FDFF),
+                                Color(0xFFCFFAFE),
+                                Color(0xFF67E8F9)
                             ),
                             modifier = Modifier.weight(1f)
                         )
@@ -244,13 +244,13 @@ fun UtilityScreen(
                             label = "index",
                             progress = uvProgress,
                             cardGradient = listOf(
-                                Color(0xFFF9A8D4),
-                                Color(0xFFDB2777)
+                                Color(0xFFFFF1F2),
+                                Color(0xFFFFC7C2)
                             ),
                             arcGradient = listOf(
-                                Color(0xFFFCE7F3),
-                                Color(0xFFF9A8D4),
-                                Color(0xFFEC4899)
+                                Color(0xFFFFF7F7),
+                                Color(0xFFFFDAD6),
+                                Color(0xFFFFA8A0)
                             ),
                             modifier = Modifier.weight(1f)
                         )
@@ -261,13 +261,13 @@ fun UtilityScreen(
                             label = "km/h",
                             progress = windProgress,
                             cardGradient = listOf(
-                                Color(0xFFD8B4FE),
-                                Color(0xFF7C3AED)
+                                Color(0xFFF3E8FF),
+                                Color(0xFFD8B4FE)
                             ),
                             arcGradient = listOf(
-                                Color(0xFFF3E8FF),
-                                Color(0xFFD8B4FE),
-                                Color(0xFFA855F7)
+                                Color(0xFFFAF5FF),
+                                Color(0xFFE9D5FF),
+                                Color(0xFFC4B5FD)
                             ),
                             modifier = Modifier.weight(1f)
                         )
