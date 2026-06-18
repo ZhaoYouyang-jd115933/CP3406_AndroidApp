@@ -31,7 +31,10 @@ fun HeroWeatherIcon(
 ) {
     val type = when {
         weather.rainChance >= 60 -> HeroWeatherType.RAIN
+
+        // UV index 6 or above should show a strong sun icon because sunscreen is recommended.
         weather.uvIndex >= 6 -> HeroWeatherType.SUN
+
         weather.windKmh >= 25 -> HeroWeatherType.WIND
         weather.temperatureC >= 30 -> HeroWeatherType.HOT
         weather.temperatureC <= 18 -> HeroWeatherType.COOL
@@ -43,14 +46,14 @@ fun HeroWeatherIcon(
         val h = size.height
 
         fun drawSoftCloud() {
-            // soft shadow
+            // Soft shadow under the cloud makes the icon feel less flat.
             drawOval(
                 color = Color(0xFF3F6FA8).copy(alpha = 0.18f),
                 topLeft = Offset(w * 0.18f, h * 0.62f),
                 size = Size(w * 0.62f, h * 0.18f)
             )
 
-            // cloud base
+            // Cloud base.
             drawRoundRect(
                 brush = Brush.linearGradient(
                     colors = listOf(
@@ -63,7 +66,7 @@ fun HeroWeatherIcon(
                 cornerRadius = CornerRadius(w * 0.16f, w * 0.16f)
             )
 
-            // cloud puffs
+            // Cloud puffs create a softer and more recognisable cloud shape.
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(Color.White, Color(0xFFE7F1FF)),
@@ -96,6 +99,7 @@ fun HeroWeatherIcon(
         }
 
         fun drawSun() {
+            // This smaller sun is kept for the READY state, where the icon should feel calm.
             drawCircle(
                 color = Color(0xFFFFD66B).copy(alpha = 0.25f),
                 radius = w * 0.25f,
@@ -113,6 +117,53 @@ fun HeroWeatherIcon(
                 ),
                 radius = w * 0.18f,
                 center = Offset(w * 0.34f, h * 0.32f)
+            )
+        }
+
+        fun drawLargeSun() {
+            val sunCenter = Offset(w * 0.58f, h * 0.48f)
+            val sunRadius = w * 0.25f
+
+            // Large outer glow makes the sun feel warmer and more important in the hero card.
+            drawCircle(
+                color = Color(0xFFFFD66B).copy(alpha = 0.22f),
+                radius = w * 0.42f,
+                center = sunCenter
+            )
+
+            // Second glow layer adds depth without making the icon look too sharp.
+            drawCircle(
+                color = Color(0xFFFFE79A).copy(alpha = 0.20f),
+                radius = w * 0.33f,
+                center = sunCenter
+            )
+
+            // Main sun body with a radial gradient so it looks less flat.
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color(0xFFFFF7B8),
+                        Color(0xFFFFD447),
+                        Color(0xFFFFA000)
+                    ),
+                    center = Offset(
+                        sunCenter.x - sunRadius * 0.30f,
+                        sunCenter.y - sunRadius * 0.35f
+                    ),
+                    radius = sunRadius * 1.35f
+                ),
+                radius = sunRadius,
+                center = sunCenter
+            )
+
+            // Small highlight gives the sun a polished, slightly dimensional look.
+            drawCircle(
+                color = Color.White.copy(alpha = 0.36f),
+                radius = sunRadius * 0.20f,
+                center = Offset(
+                    sunCenter.x - sunRadius * 0.35f,
+                    sunCenter.y - sunRadius * 0.35f
+                )
             )
         }
 
@@ -234,11 +285,11 @@ fun HeroWeatherIcon(
             }
 
             HeroWeatherType.SUN -> {
-                drawSun()
+                drawLargeSun()
             }
 
             HeroWeatherType.HOT -> {
-                drawSun()
+                drawLargeSun()
             }
 
             HeroWeatherType.WIND -> {
