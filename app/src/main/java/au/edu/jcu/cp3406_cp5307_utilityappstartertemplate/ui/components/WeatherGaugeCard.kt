@@ -18,7 +18,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -39,28 +38,21 @@ fun WeatherGaugeCard(
     arcGradient: List<Color>,
     modifier: Modifier = Modifier
 ) {
-    // A soft text shadow improves the contrast of white text on light pastel backgrounds.
-    // This keeps the visual design bright while making the title and value easier to read.
-    val mainTextShadow = Shadow(
-        color = Color.Black.copy(alpha = 0.24f),
-        offset = Offset(0f, 1.5f),
-        blurRadius = 3f
-    )
+    // A muted dark lavender-gray is used for the main text.
+    // It stays readable on light pastel backgrounds while still feeling soft and cohesive.
+    val primaryTextColor = Color(0xFF5B5873)
 
-    // The label uses a slightly softer shadow because it is secondary information.
-    // This avoids making the small text look too heavy while still improving readability.
-    val secondaryTextShadow = Shadow(
-        color = Color.Black.copy(alpha = 0.20f),
-        offset = Offset(0f, 1.2f),
-        blurRadius = 2.5f
-    )
+    // A slightly lighter companion color is used for secondary text.
+    // This keeps the visual hierarchy clear without making the card look too heavy.
+    val secondaryTextColor = Color(0xFF78758F)
 
     Column(
         modifier = modifier
             .height(130.dp)
             .clip(RoundedCornerShape(22.dp))
             .background(
-                // The text styling is adjusted to improve readability.
+                // Keep the original card background unchanged.
+                // Only the text styling is adjusted to improve readability and visual balance.
                 brush = Brush.verticalGradient(cardGradient)
             )
             .padding(8.dp),
@@ -69,12 +61,9 @@ fun WeatherGaugeCard(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium.copy(
-                // The shadow helps the white title stand out from pale card colors.
-                shadow = mainTextShadow
-            ),
-            color = Color.White,
-            // Bold weight makes short labels such as Rain, UV and Wind clearer.
+            style = MaterialTheme.typography.titleSmall,
+            color = primaryTextColor,
+            // Bold weight helps short headings such as Rain, UV, and Wind stand out clearly.
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             maxLines = 1
@@ -90,12 +79,9 @@ fun WeatherGaugeCard(
 
         Text(
             text = valueText,
-            style = MaterialTheme.typography.titleMedium.copy(
-                // The current value is the most important text, so it uses the stronger shadow.
-                shadow = mainTextShadow
-            ),
-            color = Color.White,
-            // ExtraBold gives the metric value stronger visual priority.
+            style = MaterialTheme.typography.titleLarge,
+            color = primaryTextColor,
+            // ExtraBold gives the metric value the strongest visual emphasis in the card.
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Center,
             maxLines = 1
@@ -103,12 +89,9 @@ fun WeatherGaugeCard(
 
         Text(
             text = label,
-            style = MaterialTheme.typography.titleMedium.copy(
-                // The secondary label still needs contrast, but not overpower the value.
-                shadow = secondaryTextShadow
-            ),
-            // Full white is used instead of translucent white so the label remains readable.
-            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium,
+            color = secondaryTextColor,
+            // SemiBold keeps the supporting label readable without competing with the main value.
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
             maxLines = 1
@@ -123,18 +106,18 @@ private fun SemiCircleGauge(
     modifier: Modifier = Modifier
 ) {
     Canvas(modifier = modifier) {
-        // Clamp the progress value so the needle always stays within the semicircle.
+        // Clamp the progress so the needle always stays within the valid semicircle range.
         val safeProgress = progress.coerceIn(0f, 1f)
 
         val strokeWidth = 8.dp.toPx()
 
-        // The gauge center is placed near the bottom so only the upper semicircle is visible.
+        // The center is placed near the bottom so only the upper half of the gauge is shown.
         val center = Offset(
             x = size.width / 2f,
             y = size.height - 4.dp.toPx()
         )
 
-        // The radius is calculated from the available width and height to prevent clipping.
+        // Calculate the largest radius that fits within the available canvas space.
         val radius = min(
             size.width / 2f - strokeWidth,
             size.height - strokeWidth
@@ -150,7 +133,7 @@ private fun SemiCircleGauge(
             height = radius * 2f
         )
 
-        // Draw the main semicircle arc using the gradient passed in from the parent screen.
+        // Draw the main arc using the gradient provided by the parent composable.
         drawArc(
             brush = Brush.linearGradient(
                 colors = arcGradient,
@@ -168,19 +151,19 @@ private fun SemiCircleGauge(
             )
         )
 
-        // Convert progress into an angle between 180 and 360 degrees.
+        // Convert the progress value into the angle used to position the needle.
         val angleDegrees = 180f + 180f * safeProgress
         val angleRadians = angleDegrees * PI.toFloat() / 180f
 
         val needleLength = radius * 0.72f
 
-        // Calculate the needle endpoint using basic trigonometry.
+        // Use trigonometry to calculate the needle endpoint.
         val needleEnd = Offset(
             x = center.x + cos(angleRadians) * needleLength,
             y = center.y + sin(angleRadians) * needleLength
         )
 
-        // Draw the white gauge needle.
+        // Keep the gauge needle white so it remains visually distinct from the darker text.
         drawLine(
             color = Color.White,
             start = center,
@@ -189,7 +172,7 @@ private fun SemiCircleGauge(
             cap = StrokeCap.Round
         )
 
-        // Draw the center point of the gauge needle.
+        // Draw the center dot of the gauge needle.
         drawCircle(
             color = Color.White,
             radius = 5.dp.toPx(),

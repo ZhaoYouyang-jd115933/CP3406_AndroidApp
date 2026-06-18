@@ -40,7 +40,6 @@ fun UtilityScreen(
     useFahrenheit: Boolean,
     showDetails: Boolean,
     detailedAdvice: Boolean,
-    refreshCount: Int,
     isLoading: Boolean,
     errorMessage: String?,
     onRefresh: () -> Unit
