@@ -1,19 +1,33 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.SettingSwitchRow
 
@@ -41,75 +55,44 @@ fun SettingsScreen(
     )
 
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = "Settings",
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF252738)
         )
 
-        Card(
-            modifier = Modifier.fillMaxWidth()
+        CitySelectionCard(
+            cities = cities,
+            selectedCity = selectedCity,
+            onCitySelected = onCityChange
+        )
+
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = Color(0xFFF8FAFF)
+            ),
+            elevation = CardDefaults.elevatedCardElevation(
+                defaultElevation = 1.dp
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "City",
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Text(
-                    text = "Choose the city used for live weather advice.",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                cities.chunked(2).forEach { rowCities ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        rowCities.forEach { city ->
-                            Row(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable { onCityChange(city) },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = selectedCity == city,
-                                    onClick = { onCityChange(city) }
-                                )
-
-                                Text(
-                                    text = city,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-
-                        if (rowCities.size == 1) {
-                            androidx.compose.foundation.layout.Spacer(
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(14.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text(
                     text = "Display Preferences",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2B2F42)
                 )
 
                 SettingSwitchRow(
@@ -119,7 +102,9 @@ fun SettingsScreen(
                     onCheckedChange = onUnitChange
                 )
 
-                HorizontalDivider()
+                HorizontalDivider(
+                    color = Color(0xFFE5EAF3)
+                )
 
                 SettingSwitchRow(
                     title = "Show details",
@@ -128,7 +113,9 @@ fun SettingsScreen(
                     onCheckedChange = onShowDetailsChange
                 )
 
-                HorizontalDivider()
+                HorizontalDivider(
+                    color = Color(0xFFE5EAF3)
+                )
 
                 SettingSwitchRow(
                     title = "Detailed advice",
@@ -137,6 +124,180 @@ fun SettingsScreen(
                     onCheckedChange = onAdviceModeChange
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun CitySelectionCard(
+    cities: List<String>,
+    selectedCity: String,
+    onCitySelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    // Soft gradient makes the settings card feel lighter than the old flat gray card.
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFF9FBFF),
+                            Color(0xFFF3F6FC)
+                        )
+                    )
+                )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "City",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2B2F42)
+                )
+
+                Text(
+                    text = "Choose the city used for live weather advice.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF687085)
+                )
+            }
+
+            // Cities are arranged in two columns to create a cleaner and more balanced layout.
+            cities.chunked(2).forEach { rowCities ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    rowCities.forEach { city ->
+                        CityOptionTile(
+                            city = city,
+                            selected = selectedCity == city,
+                            onClick = { onCitySelected(city) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Keep the last row aligned when there is only one city in the row.
+                    if (rowCities.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CityOptionTile(
+    city: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val backgroundBrush = if (selected) {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFEAF4FF),
+                Color(0xFFDCEBFF)
+            )
+        )
+    } else {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color.White,
+                Color(0xFFF7F8FC)
+            )
+        )
+    }
+
+    val borderColor = if (selected) {
+        Color(0xFF88B7FF)
+    } else {
+        Color(0xFFE4E9F2)
+    }
+
+    val textColor = if (selected) {
+        Color(0xFF2F5F9F)
+    } else {
+        Color(0xFF3D4356)
+    }
+
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(
+                brush = backgroundBrush
+            )
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(18.dp)
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 11.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Small status dot gives each option a cleaner custom selection style than a default radio button.
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .background(
+                    color = if (selected) Color(0xFF6EA8F7) else Color(0xFFD6DCE8),
+                    shape = CircleShape
+                )
+        )
+
+        Text(
+            text = city,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            color = textColor,
+            maxLines = 1
+        )
+
+        if (selected) {
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF6EA8F7)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "✓",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFFD6DCE8),
+                        shape = CircleShape
+                    )
+            )
         }
     }
 }
