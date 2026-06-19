@@ -162,12 +162,6 @@ private fun CitySelectionCard(
                     fontStyle = FontStyle.Italic,
                     color = Color(0xFF25283A)
                 )
-
-                Text(
-                    text = "Choose the city used for live weather advice.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF7A8398)
-                )
             }
 
             // Cities are arranged in two columns to create a cleaner and more balanced layout.
