@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.SettingSwitchRow
+import androidx.compose.ui.text.font.FontStyle
 
 @Composable
 fun SettingsScreen(
@@ -161,20 +162,25 @@ private fun CitySelectionCard(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
-                    text = "City",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2B2F42)
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "City",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontStyle = FontStyle.Italic,
+                        color = Color(0xFF25283A)
+                    )
 
-                Text(
-                    text = "Choose the city used for live weather advice.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF687085)
-                )
+                    Text(
+                        text = "Choose the city used for live weather advice.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF7A8398)
+                    )
+                }
             }
 
             // Cities are arranged in two columns to create a cleaner and more balanced layout.
