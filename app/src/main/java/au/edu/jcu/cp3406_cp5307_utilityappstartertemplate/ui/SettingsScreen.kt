@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,7 +85,7 @@ fun SettingsScreen(
             )
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
@@ -96,6 +95,12 @@ fun SettingsScreen(
                     color = Color(0xFF2B2F42)
                 )
 
+                Text(
+                    text = "Control how weather information is shown in the app.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF6D7590)
+                )
+
                 SettingSwitchRow(
                     title = "Use Fahrenheit",
                     description = "Show temperature in Fahrenheit instead of Celsius.",
@@ -103,19 +108,11 @@ fun SettingsScreen(
                     onCheckedChange = onUnitChange
                 )
 
-                HorizontalDivider(
-                    color = Color(0xFFE5EAF3)
-                )
-
                 SettingSwitchRow(
                     title = "Show details",
                     description = "Show rain chance, UV index and wind speed.",
                     checked = showDetails,
                     onCheckedChange = onShowDetailsChange
-                )
-
-                HorizontalDivider(
-                    color = Color(0xFFE5EAF3)
                 )
 
                 SettingSwitchRow(
