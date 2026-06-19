@@ -49,6 +49,12 @@ class GoReadyViewModel : ViewModel() {
         refreshSelectedCityWeather()
     }
 
+    fun setBackgroundMusicEnabled(enabled: Boolean) {
+        uiState = uiState.copy(
+            backgroundMusicEnabled = enabled
+        )
+    }
+
     private fun refreshSelectedCityWeather() {
         val cityToLoad = uiState.selectedCity
 

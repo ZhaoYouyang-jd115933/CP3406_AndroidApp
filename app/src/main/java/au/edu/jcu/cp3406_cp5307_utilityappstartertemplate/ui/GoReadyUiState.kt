@@ -15,6 +15,7 @@ data class GoReadyUiState(
     val showDetails: Boolean = true,
     val detailedAdvice: Boolean = true,
     val expandAdviceCard: Boolean = false,
+    val backgroundMusicEnabled: Boolean = false,
     val refreshCount: Int = 0,
     val isLoading: Boolean = false,
     val errorMessage: String? = null

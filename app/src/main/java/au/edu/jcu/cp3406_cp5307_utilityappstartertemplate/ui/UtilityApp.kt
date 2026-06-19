@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,13 +12,17 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.R
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.theme.CP3406_CP5603UtilityAppStarterTemplateTheme
 
 @Composable
@@ -26,6 +31,32 @@ fun UtilityApp(
 ) {
     var selectedTab by remember { mutableStateOf("Utility") }
     val uiState = goReadyViewModel.uiState
+    val context = LocalContext.current
+
+    val mediaPlayer = remember {
+        MediaPlayer.create(context, R.raw.background_music).apply {
+            isLooping = true
+            setVolume(0.25f, 0.25f)
+        }
+    }
+
+    LaunchedEffect(uiState.backgroundMusicEnabled) {
+        if (uiState.backgroundMusicEnabled) {
+            if (!mediaPlayer.isPlaying) {
+                mediaPlayer.start()
+            }
+        } else {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -69,7 +100,9 @@ fun UtilityApp(
                     detailedAdvice = uiState.detailedAdvice,
                     onAdviceModeChange = goReadyViewModel::setDetailedAdvice,
                     expandAdviceCard = uiState.expandAdviceCard,
-                    onExpandAdviceCardChange = goReadyViewModel::setExpandAdviceCard
+                    onExpandAdviceCardChange = goReadyViewModel::setExpandAdviceCard,
+                    backgroundMusicEnabled = uiState.backgroundMusicEnabled,
+                    onBackgroundMusicChange = goReadyViewModel::setBackgroundMusicEnabled
                 )
             }
         }

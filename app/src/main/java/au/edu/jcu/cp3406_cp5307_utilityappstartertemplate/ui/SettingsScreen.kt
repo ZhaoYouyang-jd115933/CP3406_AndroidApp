@@ -43,6 +43,8 @@ fun SettingsScreen(
     onAdviceModeChange: (Boolean) -> Unit,
     expandAdviceCard: Boolean,
     onExpandAdviceCardChange: (Boolean) -> Unit,
+    backgroundMusicEnabled: Boolean,
+    onBackgroundMusicChange: (Boolean) -> Unit,
 ) {
     val cities = listOf(
         "Singapore",
@@ -106,6 +108,13 @@ fun SettingsScreen(
                 description = "Hide the animation card and show advice across the full row.",
                 checked = expandAdviceCard,
                 onCheckedChange = onExpandAdviceCardChange
+            )
+
+            SettingSwitchRow(
+                title = "Background music",
+                description = "Play soft background music while using the app.",
+                checked = backgroundMusicEnabled,
+                onCheckedChange = onBackgroundMusicChange
             )
         }
     }
