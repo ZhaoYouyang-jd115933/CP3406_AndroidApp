@@ -66,10 +66,10 @@ fun SettingsScreen(
             .padding(
                 start = 16.dp,
                 end = 16.dp,
-                top = 8.dp,
-                bottom = 96.dp
+                top = 6.dp,
+                bottom = 150.dp
             ),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         CitySelectionCard(
             cities = cities,
@@ -80,7 +80,7 @@ fun SettingsScreen(
         // Keep only the setting rows so the page stays compact.
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             SettingSwitchRow(
                 title = "Use Fahrenheit",
@@ -149,8 +149,8 @@ private fun CitySelectionCard(
                         )
                     )
                 )
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -174,7 +174,7 @@ private fun CitySelectionCard(
             cities.chunked(2).forEach { rowCities ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     rowCities.forEach { city ->
                         CityOptionTile(
@@ -242,7 +242,7 @@ private fun CityOptionTile(
                 shape = RoundedCornerShape(18.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 11.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {

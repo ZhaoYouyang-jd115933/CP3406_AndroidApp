@@ -1,6 +1,5 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
-import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,9 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.R
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.theme.CP3406_CP5603UtilityAppStarterTemplateTheme
 
 @Composable
@@ -32,29 +31,24 @@ fun UtilityApp(
     var selectedTab by remember { mutableStateOf("Utility") }
     val uiState = goReadyViewModel.uiState
     val context = LocalContext.current
+    val isPreview = LocalInspectionMode.current
 
-    val mediaPlayer = remember {
-        MediaPlayer.create(context, R.raw.background_music).apply {
-            isLooping = true
-            setVolume(0.25f, 0.25f)
-        }
-    }
-
-    LaunchedEffect(uiState.backgroundMusicEnabled) {
-        if (uiState.backgroundMusicEnabled) {
-            if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
-            }
-        } else {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.pause()
+    // Start, pause, and release the app-wide background music.
+    LaunchedEffect(uiState.backgroundMusicEnabled, isPreview) {
+        if (!isPreview) {
+            if (uiState.backgroundMusicEnabled) {
+                BackgroundMusicManager.start(context)
+            } else {
+                BackgroundMusicManager.pause()
             }
         }
     }
 
-    DisposableEffect(Unit) {
+    DisposableEffect(isPreview) {
         onDispose {
-            mediaPlayer.release()
+            if (!isPreview) {
+                BackgroundMusicManager.release()
+            }
         }
     }
 
