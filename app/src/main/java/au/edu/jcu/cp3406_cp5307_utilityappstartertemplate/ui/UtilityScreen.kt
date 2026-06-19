@@ -187,6 +187,7 @@ fun UtilityScreen(
                 AdviceTextCard(
                     advice = adviceUi,
                     showDetail = detailedAdvice,
+                    expanded = true,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(156.dp)
