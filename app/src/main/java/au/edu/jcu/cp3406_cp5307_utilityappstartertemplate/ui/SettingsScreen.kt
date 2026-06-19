@@ -26,10 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.components.SettingSwitchRow
-import androidx.compose.ui.text.font.FontStyle
 
 @Composable
 fun SettingsScreen(
@@ -74,54 +74,32 @@ fun SettingsScreen(
             onCitySelected = onCityChange
         )
 
-        ElevatedCard(
+        // Only keep the three setting rows.
+        // The section title, description text and outer card are intentionally removed.
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = Color(0xFFF8FAFF)
-            ),
-            elevation = CardDefaults.elevatedCardElevation(
-                defaultElevation = 1.dp
-            )
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Display Preferences",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2B2F42)
-                )
+            SettingSwitchRow(
+                title = "Use Fahrenheit",
+                description = "Show temperature in Fahrenheit instead of Celsius.",
+                checked = useFahrenheit,
+                onCheckedChange = onUnitChange
+            )
 
-                Text(
-                    text = "Control how weather information is shown in the app.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF6D7590)
-                )
+            SettingSwitchRow(
+                title = "Show details",
+                description = "Show rain chance, UV index and wind speed.",
+                checked = showDetails,
+                onCheckedChange = onShowDetailsChange
+            )
 
-                SettingSwitchRow(
-                    title = "Use Fahrenheit",
-                    description = "Show temperature in Fahrenheit instead of Celsius.",
-                    checked = useFahrenheit,
-                    onCheckedChange = onUnitChange
-                )
-
-                SettingSwitchRow(
-                    title = "Show details",
-                    description = "Show rain chance, UV index and wind speed.",
-                    checked = showDetails,
-                    onCheckedChange = onShowDetailsChange
-                )
-
-                SettingSwitchRow(
-                    title = "Detailed advice",
-                    description = "Show longer go-out advice on the main screen.",
-                    checked = detailedAdvice,
-                    onCheckedChange = onAdviceModeChange
-                )
-            }
+            SettingSwitchRow(
+                title = "Detailed advice",
+                description = "Show longer go-out advice on the main screen.",
+                checked = detailedAdvice,
+                onCheckedChange = onAdviceModeChange
+            )
         }
     }
 }
