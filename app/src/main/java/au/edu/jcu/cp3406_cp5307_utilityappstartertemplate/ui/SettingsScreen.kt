@@ -61,24 +61,21 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 8.dp,
+                bottom = 96.dp
+            ),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Text(
-            text = "Settings",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF252738)
-        )
-
         CitySelectionCard(
             cities = cities,
             selectedCity = selectedCity,
             onCitySelected = onCityChange
         )
 
-        // Only keep the three setting rows.
-        // The section title, description text and outer card are intentionally removed.
+        // Keep only the setting rows so the page stays compact.
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -147,25 +144,21 @@ private fun CitySelectionCard(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = "City",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontStyle = FontStyle.Italic,
-                        color = Color(0xFF25283A)
-                    )
+                Text(
+                    text = "City",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontStyle = FontStyle.Italic,
+                    color = Color(0xFF25283A)
+                )
 
-                    Text(
-                        text = "Choose the city used for live weather advice.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF7A8398)
-                    )
-                }
+                Text(
+                    text = "Choose the city used for live weather advice.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF7A8398)
+                )
             }
 
             // Cities are arranged in two columns to create a cleaner and more balanced layout.
