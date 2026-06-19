@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -25,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.animation.animateContentSize
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.formatTemperature
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiModel
@@ -47,27 +49,30 @@ fun UtilityScreen(
     errorMessage: String?,
     onRefresh: () -> Unit
 ) {
+    // Convert raw weather values into user-facing text and advice models.
+    // This keeps the UI focused on display instead of duplicating business logic.
     val temperatureText = formatTemperature(weather.temperatureC, useFahrenheit)
     val status = getGoOutStatus(weather)
     val adviceUi = getAdviceUiModel(weather, detailedAdvice)
 
-    val rainProgress = weather.rainChance / 100f
-    val uvProgress = weather.uvIndex / 11f
-    val windProgress = weather.windKmh / 60f
+    // Clamp gauge progress values so unusual API data cannot draw outside the valid range.
+    val rainProgress = (weather.rainChance / 100f).coerceIn(0f, 1f)
+    val uvProgress = (weather.uvIndex / 11f).coerceIn(0f, 1f)
+    val windProgress = (weather.windKmh / 60f).coerceIn(0f, 1f)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            // Scrolling keeps the main utility screen usable on smaller devices.
+            .verticalScroll(rememberScrollState())
             .padding(
                 start = 18.dp,
                 end = 18.dp,
                 top = 18.dp,
-                bottom = 12.dp
+                bottom = 18.dp
             ),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // Branded header replaces the plain title and subtitle.
-        // This gives the home screen a stronger visual identity without changing the weather logic.
         GoReadyBrandHeader(
             modifier = Modifier.fillMaxWidth()
         )
@@ -75,7 +80,8 @@ fun UtilityScreen(
         if (isLoading) {
             Text(
                 text = "Updating live weather...",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF4F5A70)
             )
         }
 
@@ -87,6 +93,7 @@ fun UtilityScreen(
             )
         }
 
+        // Hero card gives the user the most important weather information at a glance.
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,7 +130,8 @@ fun UtilityScreen(
                         text = weather.city,
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White.copy(alpha = 0.95f)
+                        color = Color.White.copy(alpha = 0.95f),
+                        maxLines = 1
                     )
 
                     Text(
@@ -133,7 +141,8 @@ fun UtilityScreen(
                             letterSpacing = 0.sp
                         ),
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
+                        maxLines = 2
                     )
 
                     Text(
@@ -143,14 +152,16 @@ fun UtilityScreen(
                             letterSpacing = 0.sp
                         ),
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
+                        maxLines = 1
                     )
 
                     Text(
                         text = "Current temperature",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        color = Color.White.copy(alpha = 0.9f),
+                        maxLines = 1
                     )
                 }
 
@@ -178,10 +189,12 @@ fun UtilityScreen(
             }
         }
 
+        // The advice area can switch between a compact visual layout and an expanded text layout.
+        // This behavior is controlled by the settings screen.
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .animateContentSize(),
+                .animateContentSize()
         ) {
             if (expandAdviceCard) {
                 AdviceTextCard(
@@ -213,6 +226,7 @@ fun UtilityScreen(
             }
         }
 
+        // Weather details are optional so the main screen can stay simple when users prefer less detail.
         if (showDetails) {
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -290,6 +304,7 @@ fun UtilityScreen(
             }
         }
 
+        // Manual refresh keeps the interaction simple and predictable for a utility app.
         Button(
             onClick = onRefresh,
             modifier = Modifier
@@ -300,7 +315,7 @@ fun UtilityScreen(
                 contentColor = Color(0xFF1E3A5F)
             )
         ) {
-            Text("Refresh Advice")
+            Text("Refresh Weather")
         }
     }
 }

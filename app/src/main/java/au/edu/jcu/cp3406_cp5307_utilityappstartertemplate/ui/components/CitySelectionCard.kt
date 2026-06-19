@@ -7,19 +7,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -30,57 +34,56 @@ fun CitySelectionCard(
     onCitySelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8FAFF),
-                        Color(0xFFF4F6FB)
-                    )
-                ),
-                shape = RoundedCornerShape(24.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = Color.White.copy(alpha = 0.9f),
-                shape = RoundedCornerShape(24.dp)
-            )
-            .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 1.dp
+        )
     ) {
-        Text(
-            text = "City",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF2B2F42)
-        )
-
-        Text(
-            text = "Choose the city used for live weather advice.",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color(0xFF687085)
-        )
-
-        // Cities are arranged into rows of two to create a cleaner and more balanced layout.
-        cities.chunked(2).forEach { rowCities ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                rowCities.forEach { city ->
-                    CityOptionTile(
-                        city = city,
-                        selected = city == selectedCity,
-                        onClick = { onCitySelected(city) },
-                        modifier = Modifier.weight(1f)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFF9FBFF),
+                            Color(0xFFF3F6FC)
+                        )
                     )
-                }
+                )
+                .padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "City",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold,
+                fontStyle = FontStyle.Italic,
+                color = Color(0xFF25283A)
+            )
 
-                // If the last row has only one item, fill the remaining space to keep alignment consistent.
-                if (rowCities.size == 1) {
-                    Box(modifier = Modifier.weight(1f))
+            // Two-column city layout keeps the settings screen compact and easy to scan.
+            cities.chunked(2).forEach { rowCities ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    rowCities.forEach { city ->
+                        CityOptionTile(
+                            city = city,
+                            selected = selectedCity == city,
+                            onClick = { onCitySelected(city) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    if (rowCities.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
@@ -104,37 +107,35 @@ private fun CityOptionTile(
     } else {
         Brush.verticalGradient(
             colors = listOf(
-                Color(0xFFFFFFFF),
+                Color.White,
                 Color(0xFFF7F8FC)
             )
         )
     }
 
     val borderColor = if (selected) {
-        Color(0xFF8CB9FF)
+        Color(0xFF88B7FF)
     } else {
-        Color(0xFFE5E9F2)
+        Color(0xFFE4E9F2)
     }
 
     val textColor = if (selected) {
-        Color(0xFF315C9D)
+        Color(0xFF2F5F9F)
     } else {
         Color(0xFF3D4356)
     }
 
     Row(
         modifier = modifier
-            .background(
-                brush = backgroundBrush,
-                shape = RoundedCornerShape(18.dp)
-            )
+            .clip(RoundedCornerShape(18.dp))
+            .background(brush = backgroundBrush)
             .border(
                 width = 1.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(18.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -142,7 +143,7 @@ private fun CityOptionTile(
             modifier = Modifier
                 .size(10.dp)
                 .background(
-                    color = if (selected) Color(0xFF78AFFF) else Color(0xFFD8DDE8),
+                    color = if (selected) Color(0xFF6EA8F7) else Color(0xFFD6DCE8),
                     shape = CircleShape
                 )
         )
@@ -156,11 +157,33 @@ private fun CityOptionTile(
             maxLines = 1
         )
 
-        // Keep a radio button for familiar interaction, but let the tile itself carry the main visual design.
-        RadioButton(
-            selected = selected,
-            onClick = onClick
-        )
+        if (selected) {
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF6EA8F7)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "✓",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFFD6DCE8),
+                        shape = CircleShape
+                    )
+            )
+        }
     }
 }
 

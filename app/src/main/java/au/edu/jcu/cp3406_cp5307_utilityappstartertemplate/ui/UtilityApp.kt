@@ -22,18 +22,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherRepository
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
+import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.di.AppContainer
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.ui.theme.CP3406_CP5603UtilityAppStarterTemplateTheme
 
 @Composable
-fun UtilityApp(
-    goReadyViewModel: GoReadyViewModel = viewModel()
+fun UtilityApp() {
+    // AppContainer keeps object creation in one place.
+    // This supports simple dependency injection instead of creating the repository inside the ViewModel.
+    val appContainer = remember { AppContainer() }
+
+    val goReadyViewModel: GoReadyViewModel = viewModel(
+        factory = GoReadyViewModelFactory(appContainer.weatherRepository)
+    )
+
+    UtilityAppContent(
+        goReadyViewModel = goReadyViewModel
+    )
+}
+
+@Composable
+private fun UtilityAppContent(
+    goReadyViewModel: GoReadyViewModel
 ) {
     var selectedTab by remember { mutableStateOf("Utility") }
     val uiState = goReadyViewModel.uiState
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
 
-    // Start, pause, and release the app-wide background music.
+    // Background music is controlled from the app shell so it follows the whole app lifecycle.
     LaunchedEffect(uiState.backgroundMusicEnabled, isPreview) {
         if (!isPreview) {
             if (uiState.backgroundMusicEnabled) {
@@ -44,6 +62,7 @@ fun UtilityApp(
         }
     }
 
+    // Release the media player when the composable leaves the screen to avoid leaking resources.
     DisposableEffect(isPreview) {
         onDispose {
             if (!isPreview) {
@@ -56,14 +75,24 @@ fun UtilityApp(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Utility") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = "Utility"
+                        )
+                    },
                     label = { Text("Utility") },
                     selected = selectedTab == "Utility",
                     onClick = { selectedTab = "Utility" }
                 )
 
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
+                    },
                     label = { Text("Settings") },
                     selected = selectedTab == "Settings",
                     onClick = { selectedTab = "Settings" }
@@ -81,7 +110,7 @@ fun UtilityApp(
                     expandAdviceCard = uiState.expandAdviceCard,
                     isLoading = uiState.isLoading,
                     errorMessage = uiState.errorMessage,
-                    onRefresh = goReadyViewModel::refreshAdvice
+                    onRefresh = goReadyViewModel::refreshWeather
                 )
 
                 "Settings" -> SettingsScreen(
@@ -103,11 +132,31 @@ fun UtilityApp(
     }
 }
 
+// A fake repository is used only for Compose Preview.
+// This avoids making a real network request while previewing the UI in Android Studio.
+private class PreviewWeatherRepository : WeatherRepository {
+    override suspend fun getWeather(city: String): WeatherSnapshot {
+        return WeatherSnapshot(
+            city = city,
+            temperatureC = 30,
+            rainChance = 68,
+            uvIndex = 9,
+            windKmh = 14
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun UtilityAppPreview() {
     CP3406_CP5603UtilityAppStarterTemplateTheme {
-        UtilityApp()
+        val previewViewModel = remember {
+            GoReadyViewModel(PreviewWeatherRepository())
+        }
+
+        UtilityAppContent(
+            goReadyViewModel = previewViewModel
+        )
     }
 }
 
