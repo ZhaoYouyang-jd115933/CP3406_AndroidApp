@@ -66,7 +66,7 @@ fun HeroWeatherIcon(
                 cornerRadius = CornerRadius(w * 0.16f, w * 0.16f)
             )
 
-            // Cloud puffs create a softer and more recognisable cloud shape.
+            // Cloud puffs create a softer and more recognizable cloud shape.
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(Color.White, Color(0xFFE7F1FF)),

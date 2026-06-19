@@ -49,7 +49,7 @@ fun AdviceVisualCard(
     advice: AdviceUiModel,
     modifier: Modifier = Modifier
 ) {
-    // Each advice type uses a different gradient to make the visual feedback recognisable.
+    // Each advice type uses a different gradient to make the visual feedback recognizable.
     val backgroundColors = when (advice.type) {
         AdviceType.UMBRELLA -> listOf(Color(0xFFA7D8FF), Color(0xFF2563EB))
         AdviceType.SUNSCREEN -> listOf(Color(0xFFFFC1DC), Color(0xFFDB2777))
@@ -373,7 +373,7 @@ private fun LayerUpScene() {
             color = Color.White
         )
 
-        // Falling snowflakes make the cold-weather advice immediately recognisable.
+        // Falling snowflakes make the cold-weather advice immediately recognizable.
         for (i in 0..7) {
             val x = w * (0.10f + i * 0.12f)
             val y = h * (((snowOffset + i * 0.17f) % 1f) * 0.92f)
@@ -385,7 +385,7 @@ private fun LayerUpScene() {
             )
         }
 
-        // A hooded winter coat is easier to recognise than an abstract scarf or hat.
+        // A hooded winter coat is easier to recognize than an abstract scarf or hat.
         drawWinterLayerIcon(
             center = Offset(w * 0.50f, h * 0.54f),
             width = w * 0.62f,
@@ -731,7 +731,7 @@ private fun DrawScope.drawWinterLayerIcon(
     height: Float,
     sway: Float
 ) {
-    // A hooded winter coat is more recognisable than an abstract scarf or hat.
+    // A hooded winter coat is more recognizable.
     val coatWidth = width * 0.62f
     val coatHeight = height * 0.78f
     val coatTop = center.y - coatHeight * 0.38f

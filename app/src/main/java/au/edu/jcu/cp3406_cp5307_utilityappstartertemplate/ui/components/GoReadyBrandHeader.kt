@@ -204,7 +204,7 @@ private fun PremiumWeatherLogo(
                 center = Offset(w * 0.34f, h * 0.35f)
             )
 
-            // Short sun rays make the icon more recognisable at small size.
+            // Short sun rays make the icon more recognizable at small size.
             for (i in 0 until 8) {
                 val angle = Math.toRadians((i * 45).toDouble())
 

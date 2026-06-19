@@ -39,6 +39,8 @@ fun AdviceTextCard(
     modifier: Modifier = Modifier,
     expanded: Boolean = false
 ) {
+    // Each advice type uses a different accent color so users can quickly
+    // recognize the kind of weather advice being shown.
     val accentColor = when (advice.type) {
         AdviceType.UMBRELLA -> Color(0xFF4F8DFD)
         AdviceType.SUNSCREEN -> Color(0xFFEC4899)
@@ -48,6 +50,8 @@ fun AdviceTextCard(
         AdviceType.READY -> Color(0xFFF59E0B)
     }
 
+    // The top background color is matched with the advice type to create
+    // a soft visual connection between the text card and the current weather status.
     val backgroundTop = when (advice.type) {
         AdviceType.UMBRELLA -> Color(0xFFF5F9FF)
         AdviceType.SUNSCREEN -> Color(0xFFFFF3F8)
@@ -57,6 +61,8 @@ fun AdviceTextCard(
         AdviceType.READY -> Color(0xFFFFF8E7)
     }
 
+    // A subtle repeating animation draws attention to the main advice headline
+    // without making the card feel distracting or too flashy.
     val transition = rememberInfiniteTransition(label = "adviceBlink")
 
     val blinkProgress by transition.animateFloat(
@@ -69,6 +75,8 @@ fun AdviceTextCard(
         label = "adviceBlinkProgress"
     )
 
+    // The headline color gently moves between the normal text color and the
+    // advice accent color, helping the key message stand out.
     val headlineColor = lerp(
         start = MaterialTheme.colorScheme.onSurface,
         stop = accentColor,
@@ -101,7 +109,8 @@ fun AdviceTextCard(
                     vertical = if (expanded) 18.dp else 13.dp
                 )
         ) {
-            // Keep the small category badge at the top-right of the advice card.
+            // The badge stays at the top-right to label the advice category
+            // while keeping the main message area clean and readable.
             Text(
                 text = advice.visualLabel,
                 style = MaterialTheme.typography.labelSmall,
@@ -116,8 +125,8 @@ fun AdviceTextCard(
                     .padding(horizontal = 9.dp, vertical = 4.dp)
             )
 
-            // In expanded mode, the text block is moved toward the vertical center
-            // so the full-width advice card does not look empty or top-heavy.
+            // In expanded mode, the text block is vertically centered so the
+            // full-width advice card does not look empty or top-heavy.
             Column(
                 modifier = Modifier
                     .align(
@@ -147,6 +156,7 @@ fun AdviceTextCard(
                     )
                 }
 
+                // The expanded layout uses a larger headline.
                 Text(
                     text = advice.headline,
                     style = if (expanded) {
@@ -163,6 +173,8 @@ fun AdviceTextCard(
                     color = headlineColor
                 )
 
+                // The detail text is optional so the Settings screen can switch
+                // between concise advice and longer go-out guidance.
                 if (showDetail) {
                     Text(
                         text = advice.detail,
