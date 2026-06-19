@@ -53,6 +53,7 @@ fun UtilityApp(
                     useFahrenheit = uiState.useFahrenheit,
                     showDetails = uiState.showDetails,
                     detailedAdvice = uiState.detailedAdvice,
+                    expandAdviceCard = uiState.expandAdviceCard,
                     isLoading = uiState.isLoading,
                     errorMessage = uiState.errorMessage,
                     onRefresh = goReadyViewModel::refreshAdvice
@@ -66,7 +67,9 @@ fun UtilityApp(
                     showDetails = uiState.showDetails,
                     onShowDetailsChange = goReadyViewModel::setShowDetails,
                     detailedAdvice = uiState.detailedAdvice,
-                    onAdviceModeChange = goReadyViewModel::setDetailedAdvice
+                    onAdviceModeChange = goReadyViewModel::setDetailedAdvice,
+                    expandAdviceCard = uiState.expandAdviceCard,
+                    onExpandAdviceCardChange = goReadyViewModel::setExpandAdviceCard
                 )
             }
         }

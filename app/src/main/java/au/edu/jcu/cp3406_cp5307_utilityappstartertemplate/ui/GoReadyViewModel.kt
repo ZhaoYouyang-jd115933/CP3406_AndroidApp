@@ -38,6 +38,12 @@ class GoReadyViewModel : ViewModel() {
         uiState = uiState.copy(detailedAdvice = detailedAdvice)
     }
 
+    fun setExpandAdviceCard(enabled: Boolean) {
+        uiState = uiState.copy(
+            expandAdviceCard = enabled
+        )
+    }
+
     fun refreshAdvice() {
         uiState = uiState.copy(refreshCount = uiState.refreshCount + 1)
         refreshSelectedCityWeather()

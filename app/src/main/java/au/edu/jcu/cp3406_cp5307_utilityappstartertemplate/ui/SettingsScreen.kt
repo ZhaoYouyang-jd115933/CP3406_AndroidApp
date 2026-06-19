@@ -40,7 +40,9 @@ fun SettingsScreen(
     showDetails: Boolean,
     onShowDetailsChange: (Boolean) -> Unit,
     detailedAdvice: Boolean,
-    onAdviceModeChange: (Boolean) -> Unit
+    onAdviceModeChange: (Boolean) -> Unit,
+    expandAdviceCard: Boolean,
+    onExpandAdviceCardChange: (Boolean) -> Unit,
 ) {
     val cities = listOf(
         "Singapore",
@@ -99,6 +101,13 @@ fun SettingsScreen(
                 description = "Show longer go-out advice on the main screen.",
                 checked = detailedAdvice,
                 onCheckedChange = onAdviceModeChange
+            )
+
+            SettingSwitchRow(
+                title = "Expand advice card",
+                description = "Hide the animation card and show advice across the full row.",
+                checked = expandAdviceCard,
+                onCheckedChange = onExpandAdviceCardChange
             )
         }
     }

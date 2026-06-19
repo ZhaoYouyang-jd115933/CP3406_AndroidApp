@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.animation.animateContentSize
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.data.WeatherSnapshot
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.formatTemperature
 import au.edu.jcu.cp3406_cp5307_utilityappstartertemplate.domain.getAdviceUiModel
@@ -41,6 +42,7 @@ fun UtilityScreen(
     useFahrenheit: Boolean,
     showDetails: Boolean,
     detailedAdvice: Boolean,
+    expandAdviceCard: Boolean,
     isLoading: Boolean,
     errorMessage: String?,
     onRefresh: () -> Unit
@@ -176,22 +178,38 @@ fun UtilityScreen(
             }
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(156.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                .animateContentSize(),
         ) {
-            AdviceTextCard(
-                advice = adviceUi,
-                showDetail = detailedAdvice,
-                modifier = Modifier.weight(1.55f)
-            )
+            if (expandAdviceCard) {
+                AdviceTextCard(
+                    advice = adviceUi,
+                    showDetail = detailedAdvice,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(156.dp)
+                )
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(156.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    AdviceTextCard(
+                        advice = adviceUi,
+                        showDetail = detailedAdvice,
+                        modifier = Modifier.weight(1.55f)
+                    )
 
-            AdviceVisualCard(
-                advice = adviceUi,
-                modifier = Modifier.weight(1f)
-            )
+                    AdviceVisualCard(
+                        advice = adviceUi,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
 
         if (showDetails) {
