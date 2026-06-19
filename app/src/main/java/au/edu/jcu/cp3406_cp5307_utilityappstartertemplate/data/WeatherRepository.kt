@@ -61,6 +61,9 @@ class WeatherRepository {
             // Hot city, useful for hydration advice
             "Dubai" -> CityLocation(latitude = 25.2048, longitude = 55.2708)
 
+            // Very hot city in China, useful for hydration advice
+            "Turpan" -> CityLocation(latitude = 42.9513, longitude = 89.1895)
+
             // Cold city, useful for layer-up advice
             "Reykjavik" -> CityLocation(latitude = 64.1466, longitude = -21.9426)
 

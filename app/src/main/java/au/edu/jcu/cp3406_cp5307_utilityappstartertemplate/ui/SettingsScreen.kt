@@ -50,6 +50,7 @@ fun SettingsScreen(
         "Darwin",
         "Wellington",
         "Dubai",
+        "Turpan",
         "Reykjavik",
         "Tokyo",
         "London",
