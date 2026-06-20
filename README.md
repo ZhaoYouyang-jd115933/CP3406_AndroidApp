@@ -417,48 +417,167 @@ GoReady is built with Kotlin and Jetpack Compose using a simple layered architec
 
 ## Architecture
 
-The app separates UI, state management, data access, network requests, and domain logic.
+GoReady uses a simple layered architecture that separates app startup, dependency creation, state management, weather data access, advice generation, and UI rendering.
+
+The purpose of this structure is to keep the app easier to understand and maintain. The UI layer focuses on displaying information, while the ViewModel, repository, network layer, and domain helpers each handle their own responsibilities.
+
+---
+
+### Overall App Flow
 
 ```text
-UI Layer
+MainActivity
    ↓
-ViewModel Layer
+UtilityApp
    ↓
-Repository Layer
+AppContainer + GoReadyViewModelFactory
    ↓
-Network Layer
+GoReadyViewModel
+   ↓
+WeatherRepository
+   ↓
+WeatherApiService + Retrofit
    ↓
 Open-Meteo API
 ```
 
-This structure keeps the app easier to understand, maintain, and extend.
+The app starts from `MainActivity`, which applies the app theme and launches `UtilityApp`.
 
-### Main Architecture Responsibilities
+`UtilityApp` works as the main app shell. It creates the app container, creates the ViewModel through `GoReadyViewModelFactory`, manages the bottom navigation, and connects the Utility screen and Settings screen.
 
-| Layer | Files | Responsibility |
-|---|---|---|
-| Data Layer | `WeatherSnapshot.kt`, `WeatherRepository.kt` | Stores the weather model, supported city list, city coordinates, and repository logic for loading weather data. |
-| Dependency Injection | `AppContainer.kt`, `GoReadyViewModelFactory.kt` | Provides the API service and repository to the ViewModel without creating them directly inside the ViewModel. |
-| Domain Layer | `AdviceType.kt`, `AdviceHelper.kt`, `WeatherAdviceHelper.kt` | Converts raw weather values into advice, status text, visual labels, and formatted temperature text. |
-| Network Layer | `RetrofitInstance.kt`, `WeatherApiService.kt`, `OpenMeteoResponse.kt` | Connects to the Open-Meteo API and maps the API response into Kotlin data classes. |
-| UI State and Logic | `GoReadyUiState.kt`, `GoReadyViewModel.kt` | Manages selected city, weather data, settings, loading state, error state, and manual refresh. |
-| Main UI | `MainActivity.kt`, `UtilityApp.kt`, `UtilityScreen.kt`, `SettingsScreen.kt` | Starts the app, sets up navigation, displays the main weather advice screen, and provides user settings. |
-| UI Components | `GoReadyBrandHeader.kt`, `HeroWeatherIcon.kt`, `AdviceTextCard.kt`, `AdviceVisualCard.kt`, `WeatherGaugeCard.kt`, `CitySelectionCard.kt`, `SettingSwitchRow.kt` | Provides reusable UI elements for branding, advice display, animated visuals, gauges, city selection, and settings rows. |
-| Media | `BackgroundMusicManager.kt` | Manages optional background music using Android MediaPlayer. |
+`GoReadyViewModel` manages the app state and user actions. When live weather data is needed, it requests data through `WeatherRepository`.
+
+`WeatherRepository` keeps weather data access separate from the UI. Its Open-Meteo implementation uses `WeatherApiService` and Retrofit to fetch live weather data from the Open-Meteo API.
 
 ---
 
-## How the App Works
+### Weather Data Flow
 
-1. The app starts from `MainActivity`.
-2. `UtilityApp` creates the app container and ViewModel.
-3. The ViewModel requests weather data for the selected city.
-4. The repository uses Retrofit to call the Open-Meteo API.
-5. The API response is converted into a `WeatherSnapshot`.
-6. Domain helper functions convert the weather data into status text and advice.
-7. The Utility screen displays the weather, advice, visuals, and optional detail gauges.
-8. The Settings screen lets users change the city, unit, advice display, detail visibility, card layout, and background music setting.
+```text
+Selected City
+   ↓
+WeatherRepository
+   ↓
+WeatherApiService + Retrofit
+   ↓
+Open-Meteo API Response
+   ↓
+WeatherSnapshot
+   ↓
+GoReadyUiState
+   ↓
+UtilityScreen
+```
 
+When the user selects a city or presses **Refresh Weather**, the ViewModel requests updated weather data for the selected city.
+
+The repository maps the selected city to latitude and longitude, calls the Open-Meteo API, reads the API response, and converts the result into a `WeatherSnapshot`.
+
+The `WeatherSnapshot` is stored in `GoReadyUiState`, and the Utility screen displays the updated city, temperature, weather status, advice, weather icon, and weather detail gauges.
+
+---
+
+### Advice and Display Flow
+
+```text
+WeatherSnapshot
+   ↓
+Domain Helpers
+   ↓
+Status Text + Advice Text + Visual Advice Type + Temperature Display
+   ↓
+UtilityScreen
+```
+
+The app does not only display raw weather numbers. It uses domain helper functions to convert weather data into user-facing content.
+
+The domain logic creates:
+
+* Temperature display text
+* Short weather status text
+* Advice headline
+* Advice detail message
+* Advice type for the hero icon and animated visual card
+
+This keeps the advice decision logic outside the UI layer and makes the main screen easier to read and maintain.
+
+---
+
+### Settings Flow
+
+```text
+SettingsScreen
+   ↓
+GoReadyViewModel
+   ↓
+GoReadyUiState
+   ↓
+UtilityScreen
+```
+
+The Settings screen directly controls how the Utility screen looks and behaves.
+
+When the user changes a setting, the action is sent to `GoReadyViewModel`. The ViewModel updates `GoReadyUiState`, and the Utility screen recomposes with the new state.
+
+This is how the app updates:
+
+* Selected city
+* Celsius or Fahrenheit display
+* Weather detail visibility
+* Short or detailed advice
+* Expanded advice card layout
+* Background music setting
+
+---
+
+### Background Music Flow
+
+```text
+SettingsScreen
+   ↓
+GoReadyViewModel
+   ↓
+GoReadyUiState
+   ↓
+UtilityApp
+   ↓
+BackgroundMusicManager
+   ↓
+MediaPlayer
+```
+
+The background music setting is controlled through the same ViewModel state flow.
+
+When the user turns background music on or off, the ViewModel updates the UI state. `UtilityApp` observes this state and starts or pauses music through `BackgroundMusicManager`.
+
+`BackgroundMusicManager` uses Android `MediaPlayer` to start, pause, loop, and release the background music resource.
+
+---
+
+### Architecture Responsibilities
+
+| Layer | Main Files | Responsibility |
+|---|---|---|
+| App Entry | `MainActivity.kt` | Starts the app, applies the app theme, and launches `UtilityApp`. |
+| App Shell | `UtilityApp.kt` | Creates dependencies, creates the ViewModel, manages bottom navigation, and controls background music lifecycle. |
+| Dependency Injection | `AppContainer.kt`, `GoReadyViewModelFactory.kt` | Provides the API service and repository to the ViewModel without creating them directly inside the ViewModel. |
+| UI State and Logic | `GoReadyUiState.kt`, `GoReadyViewModel.kt` | Manages selected city, weather data, user settings, loading state, error state, and manual refresh. |
+| Data Layer | `WeatherSnapshot.kt`, `WeatherRepository.kt` | Stores the app weather model, supported cities, city coordinates, and repository logic for loading weather data. |
+| Network Layer | `RetrofitInstance.kt`, `WeatherApiService.kt`, `OpenMeteoResponse.kt` | Creates Retrofit, defines the Open-Meteo API request, and maps the API response into Kotlin data classes. |
+| Domain Layer | `AdviceType.kt`, `AdviceHelper.kt`, `WeatherAdviceHelper.kt` | Converts raw weather data into advice, status text, visual labels, and formatted temperature text. |
+| Main Screens | `UtilityScreen.kt`, `SettingsScreen.kt` | Displays the main weather advice screen and the settings screen that controls it. |
+| Reusable Components | `GoReadyBrandHeader.kt`, `HeroWeatherIcon.kt`, `AdviceTextCard.kt`, `AdviceVisualCard.kt`, `WeatherGaugeCard.kt`, `CitySelectionCard.kt`, `SettingSwitchRow.kt` | Provides reusable Compose UI elements for branding, weather icons, advice cards, animations, gauges, city selection, and settings rows. |
+| Media | `BackgroundMusicManager.kt` | Manages optional background music using Android `MediaPlayer`. |
+
+---
+
+### Why This Architecture Was Used
+
+This architecture was chosen to keep the app clear, maintainable, and aligned with modern Android development principles.
+
+The UI layer focuses on displaying information. The ViewModel manages state and user actions. The repository handles weather data access. The network layer handles Retrofit API communication. The domain layer converts raw weather values into meaningful advice. The dependency container keeps object creation separate from the ViewModel.
+
+This separation supports the main assessment requirements, including ViewModel usage, Repository pattern, simple dependency injection, Retrofit networking, and Jetpack Compose UI.
 
 
 
